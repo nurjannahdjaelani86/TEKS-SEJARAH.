@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPI Bahasa Indonesia - Teks Sejarah (Gorontalo)</title>
+    <!-- Menggunakan Tailwind CSS via CDN untuk styling modern yang responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kemenag: {
+                            light: '#dcfce7',
+                            DEFAULT: '#16a34a',
+                            dark: '#14532d',
+                            gold: '#eab308'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f0fdf4;
+        }
+        
+        .bg-pattern {
+            background-image: radial-gradient(#22c55e 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            background-color: #f0fdf4;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Styling khusus untuk slider interaktif */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #eab308;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            border: 2px solid #fff;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #16a34a;
+            border-radius: 4px;
+        }
+
+        /* Drag and drop styling */
+        .draggable-item {
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed #16a34a;
+            transition: background-color 0.2s;
+        }
+        .drop-zone.drag-over {
+            background-color: #dcfce7;
+            border-style: solid;
+        }
+
+        /* Custom Toast Notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 50;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
+        /* Overlay Loading Spinner */
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body class="bg-pattern text-slate-800 font-sans min-h-screen flex flex-col items-center p-4 sm:p-8">
+
+    <div id="app" class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden relative border border-green-100">
+        
+        <header class="bg-kemenag-dark text-white p-4 flex items-center justify-between shadow-md">
+            <div class="flex items-center gap-3">
+                <!-- SVG Icon Buku Madrasah -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-kemenag-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <div>
+                    <h1 class="text-sm font-bold leading-tight">MPI Madrasah Aliyah</h1>
+                    <p class="text-xs text-green-200">Kanwil Kemenag Prov. Gorontalo</p>
+                </div>
+            </div>
+            <div id="nav-indicator" class="text-xs font-semibold bg-kemenag px-3 py-1 rounded-full border border-green-400">
+                Fase F / Kelas XII
+            </div>
+        </header>
+
+        <!-- LAYAR 1: COVER / BERANDA -->
+        <div id="screen-cover" class="screen active p-8 text-center min-h-[500px] flex flex-col justify-center items-center bg-gradient-to-b from-green-100 to-green-300">
+            <div class="mb-6 relative">
+                <!-- SVG Dekorasi Tokoh Sejarah (Ilustrasi Pahlawan Lokal / Nani Wartabone) -->
+                <svg width="150" height="150" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto filter drop-shadow-xl">
+                    <circle cx="50" cy="50" r="45" fill="#eab308" fill-opacity="0.25"/>
+                    <path d="M 20 95 C 20 65, 35 55, 50 55 C 65 55, 80 65, 80 95" fill="#14532d"/>
+                    <circle cx="50" cy="38" r="14" fill="#14532d"/>
+                    <path d="M 34 32 C 34 20, 42 16, 50 16 C 58 16, 66 20, 66 32 Z" fill="#eab308"/>
+                    <path d="M 72 95 L 85 40" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+            </div>
+            
+            <div class="bg-white p-5 rounded-2xl shadow-xl border-2 border-green-400 w-full max-w-sm mb-6 relative">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-kemenag-gold text-yellow-900 text-xs font-bold px-4 py-1 rounded-full shadow-md whitespace-nowrap">
+                    Multimedia Pembelajaran Interaktif
+                </div>
+                <h2 class="text-2xl font-extrabold text-kemenag-dark mb-1 mt-3 tracking-tight">Eksplorasi Teks Sejarah</h2>
+                <h3 class="text-md font-bold text-green-600 border-b-2 border-green-100 pb-3 mb-3">Mata Pelajaran Bahasa Indonesia</h3>
+                <p class="text-xs text-gray-500 uppercase tracking-widest mb-1 font-semibold">Disusun Oleh:</p>
+                <p class="text-xl font-extrabold text-slate-800">Nurjannah Djaelani</p>
+            </div>
+
+            <p class="text-sm text-green-900 mb-8 max-w-md mx-auto leading-relaxed font-medium">
+                Pelajari cara menemukan gagasan utama dan informasi penting dari teks sejarah yang dibacakan, dengan konteks sejarah perjuangan patriotik lokal Gorontalo.
+            </p>
+
+            <button onclick="navigate('materi')" class="bg-kemenag-dark hover:bg-green-800 text-white font-bold py-3 px-8 rounded-full shadow-xl transition-transform transform hover:scale-105 active:scale-95 flex items-center gap-2 border-2 border-green-500">
+                Mulai Belajar
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-kemenag-gold" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- LAYAR 2: RINGKASAN MATERI -->
+        <div id="screen-materi" class="screen p-6 sm:p-8 min-h-[500px]">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="bg-green-100 p-2 rounded-lg text-kemenag-dark">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-kemenag-dark border-b-2 border-kemenag-gold inline-block pb-1">Intisari Materi: Teks Sejarah</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white border-l-4 border-kemenag p-5 rounded-r-xl shadow-md">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-kemenag-light text-kemenag-dark font-bold px-2 py-1 rounded text-xs">Modul 1</span>
+                        <h3 class="font-bold text-lg text-slate-800">Mengenal Teks Sejarah</h3>
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                        <strong>Teks cerita sejarah</strong> adalah teks yang memuat cerita, fakta, dan kejadian masa lampau berlatar belakang peristiwa bernilai sejarah. Disajikan dalam kronologis narasi waktu.
+                    </p>
+                    <h4 class="font-semibold text-sm text-kemenag-dark mb-2">Struktur Pembentuk Teks:</h4>
+                    <ul class="list-none space-y-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2">
+                            <span class="text-kemenag-gold font-bold">1.</span>
+                            <span><strong>Orientasi:</strong> Pengenalan awal tokoh, latar waktu, tempat.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-kemenag-gold font-bold">2.</span>
+                            <span><strong>Urutan Peristiwa:</strong> Rekaman kejadian yang diceritakan kronologis.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-kemenag-gold font-bold">3.</span>
+                            <span><strong>Reorientasi:</strong> Kesimpulan atau komentar pribadi (opsional).</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white border-l-4 border-kemenag-gold p-5 rounded-r-xl shadow-md">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="bg-yellow-100 text-yellow-800 font-bold px-2 py-1 rounded text-xs">Modul 2</span>
+                        <h3 class="font-bold text-lg text-slate-800">Menyimak Teks Aural</h3>
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                        <strong>Teks Aural</strong> adalah naskah yang diperdengarkan (narator/radio). Strategi menangkap informasi utamanya:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                            <span class="font-bold text-kemenag-dark block mb-1">🔍 Melacak Gagasan Utama</span>
+                            Dengarkan saksama kalimat pertama (Deduktif) & terakhir (Induktif) paragraf.
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                            <span class="font-bold text-kemenag-dark block mb-1">🎧 Perhatikan Intonasi</span>
+                            Penekanan suara (nada tinggi/jeda) biasa diletakkan pada kata krusial (nama, tahun).
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded border border-gray-200 sm:col-span-2">
+                            <span class="font-bold text-kemenag-dark block mb-1">📝 Taktik Mencatat (Note-taking)</span>
+                            Catatlah <strong>kata kunci</strong> (5W1H), jangan tulis kalimat utuh!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+                <button onclick="navigate('cover')" class="px-5 py-2 text-kemenag font-medium hover:bg-green-50 rounded-lg transition border border-transparent hover:border-green-200">Kembali</button>
+                <button onclick="navigate('interaktif')" class="bg-kemenag hover:bg-kemenag-dark text-white font-bold py-2 px-6 rounded-lg shadow-md transition flex items-center gap-2">
+                    Simulasi Menyimak
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- LAYAR 3: EKSPLORASI INTERAKTIF -->
+        <div id="screen-interaktif" class="screen p-6 sm:p-8 min-h-[500px]">
+            <h2 class="text-2xl font-bold text-kemenag-dark mb-2">Simulasi Menyimak Sejarah</h2>
+            <p class="text-sm text-gray-600 mb-6">
+                Geser "Radio Sejarah", dengarkan narasi, lalu susun gagasan utama.
+            </p>
+
+            <div class="bg-slate-800 p-5 rounded-2xl shadow-inner mb-6 text-white relative border-4 border-slate-700">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-xs font-mono text-green-400">RADIO FREK. GORONTALO</span>
+                    <span id="radio-channel" class="text-xl font-mono text-kemenag-gold font-bold">CH 1</span>
+                </div>
+                
+                <input type="range" id="radio-slider" min="1" max="3" value="1" step="1" class="w-full mb-4">
+                
+                <div class="mt-4 bg-slate-900 p-4 rounded-xl border border-slate-700 min-h-[100px]">
+                    <p id="audio-transcript" class="text-sm text-gray-300 italic">
+                        "Pilih saluran dan klik tombol Putar Audio..."
+                    </p>
+                </div>
+
+                <button onclick="playAuralText()" class="mt-4 w-full bg-kemenag-gold hover:bg-yellow-400 text-slate-900 font-bold py-2 px-4 rounded-lg flex justify-center gap-2">
+                    Putar Audio Aural
+                </button>
+            </div>
+
+            <!-- Modul Drag Drop -->
+            <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                <h3 class="text-sm font-bold text-kemenag-dark mb-3">Susun Gagasan Utama CH 2:</h3>
+                
+                <div class="flex flex-wrap gap-2 mb-4" id="word-bank"></div>
+                
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-2"><span class="text-sm">1.</span><div class="drop-zone flex-1 rounded bg-white px-3" data-slot="1" onclick="handleDropClick(this)"></div></div>
+                    <div class="flex items-center gap-2"><span class="text-sm">2.</span><div class="drop-zone flex-1 rounded bg-white px-3" data-slot="2" onclick="handleDropClick(this)"></div></div>
+                    <div class="flex items-center gap-2"><span class="text-sm">3.</span><div class="drop-zone flex-1 rounded bg-white px-3" data-slot="3" onclick="handleDropClick(this)"></div></div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-between">
+                <button onclick="navigate('materi')" class="px-5 py-2 text-kemenag hover:bg-green-50 rounded-lg">Kembali</button>
+                <button onclick="checkInteraktifAnswer()" class="bg-kemenag hover:bg-kemenag-dark text-white font-bold py-2 px-6 rounded-lg shadow-md transition">Cek & Lanjut Kuis</button>
+            </div>
+        </div>
+
+        <!-- LAYAR 3.5: IDENTITAS SISWA -->
+        <div id="screen-identitas" class="screen p-6 sm:p-8 min-h-[500px] flex flex-col justify-center">
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-green-200 text-center">
+                <h2 class="text-2xl font-bold text-kemenag-dark mb-2">Persiapan Evaluasi</h2>
+                <p class="text-sm text-gray-600 mb-6">Silakan lengkapi data diri Anda sebelum memulai kuis. Hasil akan direkam secara otomatis oleh sistem.</p>
+                
+                <div class="space-y-4 mb-8 text-left">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nama Lengkap Siswa</label>
+                        <input type="text" id="input-nama" placeholder="Contoh: Budi Santoso" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-kemenag focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Kelas</label>
+                        <select id="input-kelas" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-kemenag focus:outline-none transition bg-white">
+                            <option value="">-- Pilih Kelas --</option>
+                            <option value="XII MIPA 1">XII MIPA 1</option>
+                            <option value="XII MIPA 2">XII MIPA 2</option>
+                            <option value="XII IPS 1">XII IPS 1</option>
+                            <option value="XII IPS 2">XII IPS 2</option>
+                            <option value="XII Bahasa">XII Bahasa</option>
+                            <option value="XII Agama">XII Agama</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="startQuizFlow()" class="w-full bg-kemenag hover:bg-kemenag-dark text-white font-bold py-3 px-6 rounded-xl shadow-md transition text-lg flex justify-center items-center gap-2">
+                    Mulai Kerjakan Kuis
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- LAYAR 4: KUIS FORMATIF -->
+        <div id="screen-kuis" class="screen p-6 sm:p-8 min-h-[500px] relative pb-24">
+            <div class="flex justify-between items-center mb-6 border-b pb-4 border-gray-100">
+                <h2 class="text-xl font-bold text-kemenag-dark">Evaluasi Formatif</h2>
+                <div class="bg-kemenag-light text-kemenag-dark font-bold px-3 py-1 rounded-full text-sm">
+                    Soal <span id="quiz-counter">1</span> dari 5
+                </div>
+            </div>
+
+            <div id="quiz-container" class="space-y-4">
+                <p id="quiz-question" class="text-lg font-medium text-gray-800 mb-4 leading-relaxed"></p>
+                <div id="quiz-options" class="flex flex-col gap-3"></div>
+            </div>
+
+            <div id="quiz-feedback" class="hidden mt-6 p-4 rounded-lg border">
+                <div class="flex items-start gap-3">
+                    <div id="feedback-icon" class="mt-1"></div>
+                    <div>
+                        <h4 id="feedback-title" class="font-bold mb-1"></h4>
+                        <p id="feedback-text" class="text-sm text-gray-700"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-6 left-6 right-6 flex justify-end">
+                <button id="btn-next-quiz" onclick="nextQuiz()" class="hidden bg-kemenag hover:bg-kemenag-dark text-white font-bold py-2 px-6 rounded-lg shadow-md transition">
+                    Soal Selanjutnya
+                </button>
+            </div>
+        </div>
+
+        <!-- LAYAR 5: HASIL KUIS -->
+        <div id="screen-hasil" class="screen p-8 text-center min-h-[500px] flex flex-col justify-center items-center">
+            <h2 class="text-2xl font-bold text-kemenag-dark mb-2">Evaluasi Selesai!</h2>
+            <p class="text-gray-600 mb-6">Data Anda telah disimpan di database guru.</p>
+            
+            <div class="relative w-40 h-40 flex items-center justify-center bg-green-50 rounded-full border-8 border-kemenag mb-6 shadow-inner">
+                <span id="final-score" class="text-5xl font-extrabold text-kemenag-dark">0</span>
+            </div>
+
+            <h3 id="score-message" class="text-xl font-bold text-gray-800 mb-2"></h3>
+            <p id="score-desc" class="text-sm text-gray-600 mb-8 max-w-sm mx-auto"></p>
+
+            <button onclick="resetApp()" class="bg-white border-2 border-kemenag text-kemenag font-bold py-2 px-8 rounded-full shadow hover:bg-green-50 transition-colors">
+                Kembali ke Beranda
+            </button>
+        </div>
+
+    </div>
+
+    <div id="toast">Notifikasi pesan di sini</div>
+    
+    <div id="loading-overlay" class="flex">
+        <svg class="animate-spin h-10 w-10 text-kemenag mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-lg font-bold text-kemenag-dark">Menyimpan Data ke Server...</p>
+        <p class="text-sm text-gray-500">Mohon tunggu sebentar</p>
+    </div>
+
+    <script>
+        // ==========================================
+        // KONFIGURASI DATABASE GOOGLE APPS SCRIPT
+        // ==========================================
+        // PASTE URL WEB APP GOOGLE APPS SCRIPT ANDA DI BAWAH INI
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwfMKFch7abRueqKG8pv5WZznhS0pWmlwfq4mPP65x-8WQ1CcV0izagrI0F-wtlm_is/exec"; 
+        
+        let currentScreen = 'cover';
+        let namaSiswa = "";
+        let kelasSiswa = "";
+        let quizStartTime = null;
+        let studentAnswersTracker = []; // Menyimpan detail jawaban siswa
+        
+        // Data Audio Teks Sejarah
+        const audioData = {
+            1: "Pada tanggal 23 Januari 1942, pahlawan nasional Nani Wartabone memimpin rakyat Gorontalo mengusir penjajah. Gerakan ini kini dikenal sebagai Hari Patriotik.",
+            2: "Selain berjuang dengan senjata, masyarakat pegunungan Gorontalo kala itu menanam jagung. Kesimpulannya, ketahanan pangan jagung sangat mendukung perjuangan rakyat.",
+            3: "Peristiwa ini membuktikan bahwa semangat kemerdekaan, jika didukung oleh kemandirian pangan lokal, mampu mematahkan belenggu kolonialisme."
+        };
+
+        const wordBankData = [
+            { id: "w1", text: "Ketahanan Pangan" },
+            { id: "w2", text: "Penjajah Kolonial" },
+            { id: "w3", text: "Sangat Mendukung" },
+            { id: "w4", text: "Menanam Padi" },
+            { id: "w5", text: "Perjuangan Rakyat" }
+        ];
+
+        const quizData = [
+            {
+                question: "Saat menyimak pembacaan teks sejarah tentang Hari Patriotik, bagaimana cara terbaik menangkap gagasan utamanya?",
+                options: [
+                    "Mencatat seluruh nama tokoh dan tanggal sedetail mungkin.",
+                    "Fokus mendengarkan kalimat awal atau akhir pada setiap paragraf.",
+                    "Menghafalkan keseluruhan isi teks yang dibacakan narrator.",
+                    "Mengabaikan intonasi pembaca dan fokus pada imajinasi."
+                ],
+                correct: 1,
+                feedback: "Gagasan utama biasanya diletakkan deduktif (awal) atau induktif (akhir)."
+            },
+            {
+                question: "Berdasarkan narasi audio saluran 2, apa gagasan utama paragraf tersebut?",
+                options: [
+                    "Rakyat Gorontalo sangat suka memakan jagung sejak dulu.",
+                    "Pahlawan bersembunyi di pegunungan Gorontalo dari penjajah.",
+                    "Ketahanan pangan lokal (jagung) sangat mendukung perjuangan rakyat.",
+                    "Menanam jagung lebih mudah daripada mengangkat senjata."
+                ],
+                correct: 2,
+                feedback: "Inti dari paragraf kedua adalah korelasi pertanian lokal sebagai ketahanan pangan vital bagi perjuangan."
+            },
+            {
+                question: "Mengapa penting memperhatikan intonasi atau penekanan suara narrator?",
+                options: [
+                    "Penekanan suara sering kali menandai informasi penting atau gagasan utama.",
+                    "Untuk menilai apakah pembaca teks sedang merasa marah atau sedih.",
+                    "Karena itu merupakan syarat kelulusan mata pelajaran Bahasa Indonesia.",
+                    "Agar pendengar tidak mudah merasa mengantuk saat mendengarkan."
+                ],
+                correct: 0,
+                feedback: "Pembaca ahli akan meninggikan nada pada kata kunci sebagai petunjuk aural."
+            },
+            {
+                question: "Kutipan: 'Peristiwa ini membuktikan bahwa semangat kemerdekaan mampu mematahkan kolonialisme.' Bagian struktur apakah ini?",
+                options: [
+                    "Orientasi",
+                    "Urutan Peristiwa (Insiden)",
+                    "Puncak Konflik",
+                    "Reorientasi (Kesimpulan)"
+                ],
+                correct: 3,
+                feedback: "Kalimat yang menyimpulkan atau merangkum nilai di akhir cerita adalah Reorientasi."
+            },
+            {
+                question: "Apa fungsi mencatat 'kata kunci' (keyword) saat menyimak teks sejarah?",
+                options: [
+                    "Agar catatan terlihat rapi dan memiliki nilai seni.",
+                    "Membantu otak merangkai ulang gagasan utama dengan cepat.",
+                    "Untuk mencari kesalahan pengucapan dari pembaca teks.",
+                    "Menggantikan keseluruhan teks dengan kata-kata singkatan."
+                ],
+                correct: 1,
+                feedback: "Kata kunci berfungsi sebagai jangkar memori untuk merekonstruksi pemahaman tanpa mencatat seluruh kalimat."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let userScore = 0;
+        let hasAnsweredCurrent = false;
+        let selectedWordForDrop = null;
+        let isInteraktifSolved = false;
+
+        function navigate(screenId) {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById('screen-' + screenId).classList.add('active');
+            window.scrollTo(0, 0);
+
+            if (screenId === 'interaktif') initInteraktif();
+        }
+
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.classList.add("show");
+            setTimeout(() => { toast.classList.remove("show"); }, duration);
+        }
+
+        // Modul Radio Slider
+        const radioSlider = document.getElementById('radio-slider');
+        const channelLabel = document.getElementById('radio-channel');
+        const audioTranscript = document.getElementById('audio-transcript');
+
+        radioSlider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            channelLabel.innerText = 'CH ' + val;
+            audioTranscript.innerText = "Saluran " + val + " dipilih. Klik Putar Audio...";
+            window.speechSynthesis.cancel();
+        });
+
+        function playAuralText() {
+            const val = radioSlider.value;
+            const textToSpeak = audioData[val];
+            audioTranscript.innerHTML = `<span class="text-green-400">Memutar Suara:</span> <br> "${textToSpeak}"`;
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Modul Drag Drop
+        function initInteraktif() {
+            const wordBank = document.getElementById('word-bank');
+            wordBank.innerHTML = '';
+            const shuffled = [...wordBankData].sort(() => Math.random() - 0.5);
+            shuffled.forEach(w => {
+                const el = document.createElement('div');
+                el.className = 'bg-white border-2 border-green-400 font-semibold px-3 py-1.5 rounded shadow-sm text-sm draggable-item select-none';
+                el.innerText = w.text; el.id = w.id;
+                el.onclick = () => selectWord(el);
+                wordBank.appendChild(el);
+            });
+            document.querySelectorAll('.drop-zone').forEach(z => z.innerHTML = '');
+            isInteraktifSolved = false;
+        }
+
+        function selectWord(element) {
+            if (selectedWordForDrop) selectedWordForDrop.classList.remove('ring-2', 'ring-kemenag-gold');
+            if (selectedWordForDrop === element) { selectedWordForDrop = null; return; }
+            selectedWordForDrop = element;
+            selectedWordForDrop.classList.add('ring-2', 'ring-kemenag-gold');
+        }
+
+        function handleDropClick(zone) {
+            if (selectedWordForDrop) {
+                if (zone.children.length > 0) document.getElementById('word-bank').appendChild(zone.children[0]);
+                zone.appendChild(selectedWordForDrop);
+                selectedWordForDrop.classList.remove('ring-2', 'ring-kemenag-gold');
+                selectedWordForDrop = null;
+            } else if (zone.children.length > 0) {
+                document.getElementById('word-bank').appendChild(zone.children[0]);
+            }
+        }
+
+        function checkInteraktifAnswer() {
+            if(isInteraktifSolved) { navigate('identitas'); return; }
+            const z1 = document.querySelector('[data-slot="1"]').firstElementChild;
+            const z2 = document.querySelector('[data-slot="2"]').firstElementChild;
+            const z3 = document.querySelector('[data-slot="3"]').firstElementChild;
+
+            if(!z1 || !z2 || !z3) return showToast("Harap isi ketiga kotak.");
+            if (z1.id === 'w1' && z2.id === 'w3' && z3.id === 'w5') {
+                showToast("Susunan Benar!");
+                isInteraktifSolved = true;
+                setTimeout(() => navigate('identitas'), 1500);
+            } else showToast("Susunan kurang tepat. Pertanian -> Mendukung -> Perjuangan");
+        }
+
+        function startQuizFlow() {
+            const inputNama = document.getElementById('input-nama').value.trim();
+            const inputKelas = document.getElementById('input-kelas').value;
+
+            if(inputNama === "" || inputKelas === "") {
+                showToast("Mohon isi Nama Lengkap dan Kelas Anda terlebih dahulu!");
+                return;
+            }
+
+            namaSiswa = inputNama;
+            kelasSiswa = inputKelas;
+            
+            navigate('kuis');
+            currentQuizIndex = 0;
+            userScore = 0;
+            studentAnswersTracker = [];
+            quizStartTime = Date.now();
+            renderQuiz();
+        }
+
+        function renderQuiz() {
+            hasAnsweredCurrent = false;
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            
+            const qData = quizData[currentQuizIndex];
+            document.getElementById('quiz-counter').innerText = (currentQuizIndex + 1);
+            document.getElementById('quiz-question').innerText = qData.question;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            qData.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 transition font-medium text-gray-700';
+                btn.innerHTML = `<span class="inline-block w-6 h-6 rounded-full bg-gray-100 text-center text-sm mr-3 border">${String.fromCharCode(65+index)}</span> ${opt}`;
+                btn.onclick = () => selectAnswer(index, btn, opt);
+                optionsContainer.appendChild(btn);
+            });
+            
+            if(currentQuizIndex === quizData.length - 1) {
+                document.getElementById('btn-next-quiz').innerText = "Selesai & Kirim Hasil";
+            } else {
+                document.getElementById('btn-next-quiz').innerText = "Soal Selanjutnya";
+            }
+        }
+
+        function selectAnswer(selectedIndex, btnElement, selectedText) {
+            if(hasAnsweredCurrent) return;
+            hasAnsweredCurrent = true;
+
+            const qData = quizData[currentQuizIndex];
+            const isCorrect = selectedIndex === qData.correct;
+            
+            // Rekam jawaban siswa untuk dikirim ke Spreadsheet
+            studentAnswersTracker.push({
+                jawaban_siswa: String.fromCharCode(65+selectedIndex) + ". " + selectedText,
+                status: isCorrect ? "Benar" : "Salah"
+            });
+
+            const allBtns = document.getElementById('quiz-options').children;
+            for(let i=0; i<allBtns.length; i++) {
+                allBtns[i].className = 'w-full text-left p-4 rounded-lg border-2 border-gray-200 opacity-50 cursor-not-allowed font-medium text-gray-700';
+                if(i === qData.correct) {
+                    allBtns[i].className = 'w-full text-left p-4 rounded-lg border-2 border-green-500 bg-green-100 text-green-800 font-medium';
+                } else if (i === selectedIndex && !isCorrect) {
+                    allBtns[i].className = 'w-full text-left p-4 rounded-lg border-2 border-red-500 bg-red-50 text-red-800 font-medium';
+                }
+            }
+
+            if(isCorrect) userScore += 20;
+
+            const fb = document.getElementById('quiz-feedback');
+            const fbTitle = document.getElementById('feedback-title');
+            fb.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'bg-red-50', 'border-red-200');
+            
+            if(isCorrect) {
+                fb.classList.add('bg-green-50', 'border-green-200');
+                fbTitle.innerText = "Jawaban Tepat!"; fbTitle.className = "font-bold text-green-700";
+            } else {
+                fb.classList.add('bg-red-50', 'border-red-200');
+                fbTitle.innerText = "Kurang Tepat"; fbTitle.className = "font-bold text-red-700";
+            }
+            document.getElementById('feedback-text').innerText = qData.feedback;
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        function nextQuiz() {
+            currentQuizIndex++;
+            if(currentQuizIndex < quizData.length) {
+                renderQuiz();
+            } else {
+                submitDataToGAS();
+            }
+        }
+
+        async function submitDataToGAS() {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.display = 'flex'; // Tampilkan loading
+
+            const timeSpentSeconds = Math.floor((Date.now() - quizStartTime) / 1000);
+            
+            // Siapkan Paket JSON untuk GAS
+            const payload = {
+                nama: namaSiswa,
+                kelas: kelasSiswa,
+                durasi: timeSpentSeconds + " detik",
+                benar: userScore / 20,
+                salah: quizData.length - (userScore / 20),
+                jawaban: studentAnswersTracker
+            };
+
+            // Jika URL GAS kosong, anggap mode offline local
+            if (GAS_URL === "ISI_DENGAN_URL_WEB_APP_ANDA_DISINI" || GAS_URL.trim() === "") {
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    showToast("Peringatan: Script Apps belum dikonfigurasi, simulasi lokal.");
+                    showResult();
+                }, 1500);
+                return;
+            }
+
+            try {
+                // Fetch request berupa POST data text (JSON.stringify) menghindari isu CORS preflight kompleks di GAS
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                if(result.status === 'success') {
+                    overlay.style.display = 'none';
+                    showResult();
+                } else {
+                    throw new Error("Server error");
+                }
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                overlay.style.display = 'none';
+                alert("Gangguan jaringan saat menyimpan ke Database, tapi skor Anda akan tetap ditampilkan.");
+                showResult();
+            }
+        }
+
+        function showResult() {
+            navigate('hasil');
+            document.getElementById('final-score').innerText = userScore;
+            
+            const msgEl = document.getElementById('score-message');
+            const descEl = document.getElementById('score-desc');
+            
+            if(userScore >= 80) {
+                msgEl.innerText = "Luar Biasa, Hebat!";
+                msgEl.className = "text-xl font-bold text-green-600 mb-2";
+                descEl.innerText = `${namaSiswa}, Anda sangat teliti menyimak teks sejarah. Pertahankan prestasimu!`;
+            } else if (userScore >= 60) {
+                msgEl.innerText = "Cukup Baik!";
+                msgEl.className = "text-xl font-bold text-yellow-600 mb-2";
+                descEl.innerText = `Pemahaman Anda sudah baik. Terus berlatih fokus ya, ${namaSiswa}.`;
+            } else {
+                msgEl.innerText = "Tetap Semangat!";
+                msgEl.className = "text-xl font-bold text-red-500 mb-2";
+                descEl.innerText = `Jangan menyerah, ${namaSiswa}. Ulangi materi dan perhatikan kembali kata kuncinya.`;
+            }
+        }
+
+        function resetApp() {
+            window.speechSynthesis.cancel();
+            document.getElementById('input-nama').value = "";
+            document.getElementById('input-kelas').value = "";
+            navigate('cover');
+        }
+
+        window.onload = function() {
+            navigate('cover');
+            radioSlider.dispatchEvent(new Event('input'));
+        };
+    </script>
+</body>
+</html>
